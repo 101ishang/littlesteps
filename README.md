@@ -78,6 +78,34 @@ All tests run offline against an in-memory database and a simulated model (`Func
 real API key or network access is required to run the test suite, and it doesn't touch
 `data/app.db` or spend any tokens.
 
+## Deploying (optional — hosts the whole app as one service)
+
+In production, the backend serves the built frontend itself (see the `StaticFiles` mount at the
+bottom of `backend/main.py`), so there's a single deployable service, no CORS to configure, and no
+second process to run.
+
+**Using Render.com (recommended, free tier works):**
+
+1. Push this repo to GitHub (already done if you're reading this from the repo).
+2. In the Render dashboard: **New → Blueprint**, point it at this repo. Render reads `render.yaml`
+   and creates one web service with the right build/start commands already filled in.
+3. When prompted, set the two secret environment variables (never commit real values for these):
+   - `PORTKEY_API_KEY` — your Portkey key
+   - `JWT_SECRET_KEY` — any random string (e.g. `python3 -c "import secrets; print(secrets.token_hex(32))"`)
+4. Deploy. Once Render assigns your URL (e.g. `https://littlesteps.onrender.com`), go back to the
+   service's environment variables and set `FRONTEND_URL` to that exact URL (with `https://`) —
+   it's only used to build the password-reset link — then redeploy.
+
+**Known limitation:** Render's free tier uses an ephemeral filesystem, so `data/app.db` (and
+anything in it — accounts, children, check-in history) is not guaranteed to survive a redeploy or
+a long idle spin-down. That's fine for demoing the app's behavior, but real persistent use would
+need a paid instance with a persistent disk, or a hosted database instead of SQLite — listed in
+`Agents.md`'s limitations rather than hidden.
+
+**Other hosts:** any platform that can run a Python web service (Railway, Fly.io, a VM, etc.) works
+the same way — build with `pip install -r requirements.txt && cd frontend && npm install && npm run build`,
+then start with `uvicorn backend.main:app --host 0.0.0.0 --port $PORT`, with the same three env vars.
+
 ## Project layout
 
 ```

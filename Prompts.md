@@ -42,3 +42,4 @@ A record of user prompts given to Claude Code for work done in this directory (`
 38. Just upload it as a public repo. Don't add anyone now
 39. Also create a forgot password feature
 40. Can you create a report for this - The motivation is that the idea came directly from my mother who is a pediatrician and has served the rural community of my hometown for 20 years. From her experience, one of the biggest challenges that new parents faced was to identify early signs of problems in child growth which surfaced as more problematic issues later if left untreated.
+41. How can I deploy it

@@ -1,0 +1,21 @@
+# Render.com Blueprint — deploys LittleSteps as a single web service.
+# In the Render dashboard: New -> Blueprint -> select this repo -> Apply.
+# You'll be prompted to fill in the two "sync: false" secret values below
+# (never commit real values for these — see Agents.md -> Secrets).
+services:
+  - type: web
+    name: littlesteps
+    runtime: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt && cd frontend && npm install && npm run build"
+    startCommand: "uvicorn backend.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PORTKEY_API_KEY
+        sync: false
+      - key: JWT_SECRET_KEY
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+        # Set this AFTER your first deploy, once Render has assigned your
+        # URL (e.g. https://littlesteps.onrender.com) — it's only used to
+        # build the password-reset link. Include the https:// scheme.

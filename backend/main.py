@@ -10,11 +10,14 @@ foundation, now with accounts and screening history on top of it.
 
 from __future__ import annotations
 
+import os
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
@@ -55,7 +58,13 @@ from backend.schemas import (
 # prototype the "email" is logged to the server console instead of actually
 # sent. The security model is otherwise exactly what a real email-backed flow
 # would use (single-use, hashed, expiring token; generic response either way).
-FRONTEND_URL = "http://localhost:5173"
+# FRONTEND_URL is only used to build that reset link — in production (single
+# origin, see the static-file mount below) it should be set to the app's own
+# deployed URL; locally it defaults to the Vite dev server.
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:5173")
+
+FRONTEND_DIST = Path(__file__).resolve().parent.parent / "frontend" / "dist"
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -65,9 +74,13 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Imprint — Developmental Screening Aid (prototype API)", lifespan=lifespan)
 
+# Needed for local dev only, where the Vite dev server (5173) and the API
+# (8000) are different origins. In production the frontend is served by this
+# same app (see the StaticFiles mount at the bottom of this file), so these
+# requests are same-origin and CORS doesn't apply to them at all.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=[FRONTEND_URL, "http://localhost:5173"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -340,3 +353,15 @@ def analytics_summary(db: Session = Depends(get_db)) -> dict:
             "note": "Token counts are real, measured per-run totals (explainer + safety-reviewer calls combined). Get $ cost per token from your Portkey dashboard for this model/key rather than an estimate here.",
         },
     }
+
+
+# ---------------------------------------------------------------------------
+# Serve the built frontend (production/deployment only)
+# ---------------------------------------------------------------------------
+# Registered last so it never shadows the /api/* routes above. Locally, run
+# the Vite dev server separately instead (see README.md) — this directory
+# only exists after `npm run build`. html=True serves index.html for "/",
+# which is all this single-page app needs (it has no other real routes; the
+# password-reset link uses a query string on "/", not a separate path).
+if FRONTEND_DIST.is_dir():
+    app.mount("/", StaticFiles(directory=FRONTEND_DIST, html=True), name="frontend")
