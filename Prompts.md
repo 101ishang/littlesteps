@@ -34,3 +34,9 @@ A record of user prompts given to Claude Code for work done in this directory (`
 30. Depending upon the currently used data, can you specify on the app what age group of children is the app best for. I need to make sure that whatever the app quotes or recommends is based out of true metrics
 31. Using this page, can you make sure my app is as per the guidance. ignore the demo video part - https://zlisto.github.io/mgt_409_fa26/project_requirements.html#demo-video
 32. (priority choice) Wire up real agents
+33. Commit the working tree changes with a sensible message.
+34. (priority choice) GitHub + README
+35. It says safari can't connect to the server
+36. Yes, working now
+37. what is the link for the github repo
+38. Just upload it as a public repo. Don't add anyone now
