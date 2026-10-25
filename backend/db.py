@@ -80,6 +80,25 @@ class ScreeningRecord(Base):
     child: Mapped["Child"] = relationship(back_populates="screenings")
 
 
+class PasswordResetToken(Base):
+    """A one-time, time-limited password reset token.
+
+    Only `token_hash` (sha256 of the raw token) is stored — never the raw
+    token itself — same principle as `User.password_hash` (see backend/auth.py).
+    A token is single-use (`used_at`) and expires (`expires_at`); both are
+    checked before it's honored (backend/main.py's reset-password endpoint).
+    """
+
+    __tablename__ = "password_reset_tokens"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False, index=True)
+    token_hash: Mapped[str] = mapped_column(String, unique=True, index=True, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    expires_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    used_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+
+
 class AnalyticsEvent(Base):
     """Anonymized, aggregate-only analytics. No user_id/child_id/email/name — see module docstring.
 

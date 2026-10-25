@@ -40,3 +40,4 @@ A record of user prompts given to Claude Code for work done in this directory (`
 36. Yes, working now
 37. what is the link for the github repo
 38. Just upload it as a public repo. Don't add anyone now
+39. Also create a forgot password feature

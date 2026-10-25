@@ -21,16 +21,27 @@ from sqlalchemy.orm import Session
 load_dotenv()  # reads AI_finals_project/.env if present; see Agents.md -> Secrets
 
 from backend.agents import generate_explanation
-from backend.auth import create_access_token, get_current_user, hash_password, verify_password
+from backend.auth import (
+    create_access_token,
+    generate_password_reset_token,
+    get_current_user,
+    hash_password,
+    hash_reset_token,
+    utcnow_naive,
+    verify_password,
+)
 from backend.corrected_age import CorrectedAgeInput, CorrectedAgeResult, calculate_corrected_age
-from backend.db import AnalyticsEvent, Child, ScreeningRecord, User, get_db, init_db
+from backend.db import AnalyticsEvent, Child, PasswordResetToken, ScreeningRecord, User, get_db, init_db
 from backend.growth_percentiles import GrowthInput, GrowthResult, calculate_growth_percentile
 from backend.rules import get_age_entry, list_age_labels, score_screening
 from backend.schemas import (
     AIExplanationOut,
     ChildCreate,
     ChildOut,
+    ForgotPasswordRequest,
     LoginRequest,
+    MessageResponse,
+    ResetPasswordRequest,
     ScreenResponse,
     ScreeningRecordOut,
     ScreeningSubmission,
@@ -38,6 +49,13 @@ from backend.schemas import (
     TokenResponse,
     UserOut,
 )
+
+# No email service is wired up (the course key restricts env vars to
+# PORTKEY_API_KEY/OPENAI_API_KEY — see Agents.md -> Secrets), so for this
+# prototype the "email" is logged to the server console instead of actually
+# sent. The security model is otherwise exactly what a real email-backed flow
+# would use (single-use, hashed, expiring token; generic response either way).
+FRONTEND_URL = "http://localhost:5173"
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -88,6 +106,57 @@ def login(req: LoginRequest, db: Session = Depends(get_db)) -> TokenResponse:
 @app.get("/api/auth/me", response_model=UserOut)
 def me(current_user: User = Depends(get_current_user)) -> User:
     return current_user
+
+
+_GENERIC_FORGOT_PASSWORD_MESSAGE = (
+    "If an account exists for that email, a password reset link has been sent."
+)
+
+
+@app.post("/api/auth/forgot-password", response_model=MessageResponse)
+def forgot_password(req: ForgotPasswordRequest, db: Session = Depends(get_db)) -> MessageResponse:
+    """Always returns the same generic message, whether or not the email exists.
+
+    This prevents using this endpoint to check which emails have an account
+    (user enumeration) — Hard rule 9 / Agents.md's data-minimization spirit
+    applied to auth, not just child data.
+    """
+    user = db.query(User).filter(User.email == req.email).first()
+    if user is not None:
+        raw_token, token_hash, expires_at = generate_password_reset_token()
+        db.add(PasswordResetToken(user_id=user.id, token_hash=token_hash, expires_at=expires_at))
+        db.commit()
+        reset_link = f"{FRONTEND_URL}/?reset_token={raw_token}"
+        # Stand-in for sending a real email (see this module's FRONTEND_URL comment).
+        # print(), not logger.info(): uvicorn's default logging config filters out
+        # plain app-level INFO records, and this needs to be unmissable in dev.
+        print(f"\n===== PASSWORD RESET (dev mode — this would be emailed) =====\n"
+              f"user_id={user.id}\nReset link: {reset_link}\n"
+              f"================================================================\n")
+    return MessageResponse(message=_GENERIC_FORGOT_PASSWORD_MESSAGE)
+
+
+@app.post("/api/auth/reset-password", response_model=MessageResponse)
+def reset_password(req: ResetPasswordRequest, db: Session = Depends(get_db)) -> MessageResponse:
+    token_hash = hash_reset_token(req.token)
+    reset_token = db.query(PasswordResetToken).filter(PasswordResetToken.token_hash == token_hash).first()
+
+    invalid = (
+        reset_token is None
+        or reset_token.used_at is not None
+        or reset_token.expires_at < utcnow_naive()
+    )
+    if invalid:
+        raise HTTPException(status_code=400, detail="This reset link is invalid or has expired.")
+
+    user = db.get(User, reset_token.user_id)
+    if user is None:
+        raise HTTPException(status_code=400, detail="This reset link is invalid or has expired.")
+
+    user.password_hash = hash_password(req.new_password)
+    reset_token.used_at = utcnow_naive()
+    db.commit()
+    return MessageResponse(message="Your password has been reset. You can now log in.")
 
 
 # ---------------------------------------------------------------------------

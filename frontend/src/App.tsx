@@ -2,12 +2,14 @@ import { useEffect, useState } from 'react'
 import './App.css'
 import {
   createChild,
+  forgotPassword,
   getCorrectedAge,
   getMe,
   getMilestones,
   getScreeningHistory,
   listChildren,
   login,
+  resetPassword,
   signup,
   submitScreeningForChild,
 } from './api'
@@ -34,11 +36,17 @@ import {
   type User,
 } from './types'
 
-type Step = 'loading' | 'auth' | 'children' | 'questionnaire' | 'results' | 'history'
+type Step = 'loading' | 'auth' | 'forgot-password' | 'reset-password' | 'children' | 'questionnaire' | 'results' | 'history'
 
 function todayIso(): string {
   return new Date().toISOString().slice(0, 10)
 }
+
+// Captured once at module load (not inside a component effect): React
+// StrictMode double-invokes mount effects in dev, and the effect strips this
+// param from the URL as a side effect — on the second invocation it would
+// read back an already-stripped, empty query string and lose the token.
+const INITIAL_RESET_TOKEN = new URLSearchParams(window.location.search).get('reset_token')
 
 export default function App() {
   const [page, setPage] = useState<Page>('app')
@@ -56,6 +64,16 @@ export default function App() {
   const [authEmail, setAuthEmail] = useState('')
   const [authPassword, setAuthPassword] = useState('')
   const [authError, setAuthError] = useState('')
+
+  // Forgot / reset password
+  const [forgotEmail, setForgotEmail] = useState('')
+  const [forgotMessage, setForgotMessage] = useState('')
+  const [forgotError, setForgotError] = useState('')
+  const [resetToken, setResetToken] = useState('')
+  const [resetNewPassword, setResetNewPassword] = useState('')
+  const [resetConfirmPassword, setResetConfirmPassword] = useState('')
+  const [resetMessage, setResetMessage] = useState('')
+  const [resetError, setResetError] = useState('')
 
   // Add-child form
   const [newChildName, setNewChildName] = useState('')
@@ -76,6 +94,14 @@ export default function App() {
   const [history, setHistory] = useState<ScreeningRecord[]>([])
 
   useEffect(() => {
+    if (INITIAL_RESET_TOKEN) {
+      setResetToken(INITIAL_RESET_TOKEN)
+      setStep('reset-password')
+      // Clean the token out of the visible URL without reloading the page.
+      window.history.replaceState({}, '', window.location.pathname)
+      return
+    }
+
     if (!getToken()) {
       setStep('auth')
       return
@@ -112,6 +138,36 @@ export default function App() {
       setStep('children')
     } catch (err) {
       setAuthError(err instanceof Error ? err.message : 'Something went wrong.')
+    }
+  }
+
+  async function handleForgotPasswordSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    setForgotError('')
+    setForgotMessage('')
+    try {
+      const { message } = await forgotPassword(forgotEmail)
+      setForgotMessage(message)
+    } catch (err) {
+      setForgotError(err instanceof Error ? err.message : 'Something went wrong.')
+    }
+  }
+
+  async function handleResetPasswordSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    setResetError('')
+    setResetMessage('')
+    if (resetNewPassword !== resetConfirmPassword) {
+      setResetError('Passwords do not match.')
+      return
+    }
+    try {
+      const { message } = await resetPassword(resetToken, resetNewPassword)
+      setResetMessage(message)
+      setResetNewPassword('')
+      setResetConfirmPassword('')
+    } catch (err) {
+      setResetError(err instanceof Error ? err.message : 'Something went wrong.')
     }
   }
 
@@ -288,6 +344,86 @@ export default function App() {
             >
               {authMode === 'login' ? "Don't have an account? Sign up" : 'Already have an account? Log in'}
             </button>
+            {authMode === 'login' && (
+              <button
+                type="button"
+                className="link-button centered"
+                onClick={() => {
+                  setForgotEmail(authEmail)
+                  setForgotMessage('')
+                  setForgotError('')
+                  setStep('forgot-password')
+                }}
+              >
+                Forgot password?
+              </button>
+            )}
+          </form>
+        )}
+
+        {step === 'forgot-password' && (
+          <form className="card" onSubmit={handleForgotPasswordSubmit}>
+            <h2>Reset your password</h2>
+            <p className="instructions">
+              Enter your account email and we'll send you a link to reset your password.
+            </p>
+            <label>
+              Email
+              <input
+                type="email"
+                required
+                value={forgotEmail}
+                onChange={(e) => setForgotEmail(e.target.value)}
+              />
+            </label>
+            {forgotError && <p className="error">{forgotError}</p>}
+            {forgotMessage && <p className="notice">{forgotMessage}</p>}
+            <button type="submit" className="primary-button">
+              Send reset link
+            </button>
+            <button type="button" className="link-button centered" onClick={() => setStep('auth')}>
+              Back to log in
+            </button>
+          </form>
+        )}
+
+        {step === 'reset-password' && (
+          <form className="card" onSubmit={handleResetPasswordSubmit}>
+            <h2>Choose a new password</h2>
+            <label>
+              New password
+              <input
+                type="password"
+                required
+                minLength={8}
+                value={resetNewPassword}
+                onChange={(e) => setResetNewPassword(e.target.value)}
+              />
+            </label>
+            <label>
+              Confirm new password
+              <input
+                type="password"
+                required
+                minLength={8}
+                value={resetConfirmPassword}
+                onChange={(e) => setResetConfirmPassword(e.target.value)}
+              />
+            </label>
+            {resetError && <p className="error">{resetError}</p>}
+            {resetMessage && (
+              <>
+                <p className="notice">{resetMessage}</p>
+                <button type="button" className="primary-button" onClick={() => setStep('auth')}>
+                  Go to log in
+                </button>
+              </>
+            )}
+            {!resetMessage && (
+              <button type="submit" className="primary-button">
+                Reset password
+              </button>
+            )}
           </form>
         )}
 

@@ -66,6 +66,17 @@ export function getMe(): Promise<User> {
   return request('/api/auth/me')
 }
 
+export function forgotPassword(email: string): Promise<{ message: string }> {
+  return request('/api/auth/forgot-password', { method: 'POST', body: JSON.stringify({ email }) })
+}
+
+export function resetPassword(token: string, newPassword: string): Promise<{ message: string }> {
+  return request('/api/auth/reset-password', {
+    method: 'POST',
+    body: JSON.stringify({ token, new_password: newPassword }),
+  })
+}
+
 export function createChild(
   nickname: string,
   dateOfBirth: string,

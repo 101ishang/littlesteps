@@ -11,7 +11,9 @@ password. `User.password_hash` is never included in any API response model.
 
 from __future__ import annotations
 
+import hashlib
 import os
+import secrets
 from datetime import datetime, timedelta, timezone
 
 import bcrypt
@@ -24,6 +26,7 @@ from backend.db import User, get_db
 
 JWT_ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7  # 7 days
+PASSWORD_RESET_TOKEN_EXPIRE_MINUTES = 60  # 1 hour
 
 _bearer_scheme = HTTPBearer(auto_error=False)
 
@@ -64,6 +67,31 @@ def decode_access_token(token: str) -> int:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or expired session"
         ) from exc
+
+
+def utcnow_naive() -> datetime:
+    """Naive UTC "now" — use this (not datetime.now(timezone.utc)) for anything
+    compared against a value loaded back from a plain SQLite DateTime column.
+
+    SQLite/SQLAlchemy's plain DateTime column drops tzinfo on round-trip
+    (confirmed empirically: a stored tz-aware value comes back naive), so
+    mixing naive and tz-aware datetimes in a comparison raises TypeError.
+    """
+    return datetime.now(timezone.utc).replace(tzinfo=None)
+
+
+def generate_password_reset_token() -> tuple[str, str, datetime]:
+    """Returns (raw_token, token_hash, expires_at). Only the hash is ever stored."""
+    raw_token = secrets.token_urlsafe(32)
+    token_hash = hash_reset_token(raw_token)
+    expires_at = utcnow_naive() + timedelta(minutes=PASSWORD_RESET_TOKEN_EXPIRE_MINUTES)
+    return raw_token, token_hash, expires_at
+
+
+def hash_reset_token(raw_token: str) -> str:
+    # sha256, not bcrypt: this is a high-entropy random token, not a human-chosen
+    # password, so there's no brute-force-guessing risk to slow down against.
+    return hashlib.sha256(raw_token.encode("utf-8")).hexdigest()
 
 
 def get_current_user(
