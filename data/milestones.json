@@ -1,0 +1,367 @@
+{
+  "meta": {
+    "description": "Developmental milestone checklists used by the rules engine (backend/rules.py) to screen for possible red flags. This is a screening aid only, never a diagnosis.",
+    "coverage": "Ages 2 months through 5 years are sourced from the CDC 'Learn the Signs. Act Early.' (LTSAE) milestone checklists, fetched 2026-10-18. Domains follow CDC's own categories: Social/Emotional, Language/Communication, Cognitive, Movement/Physical Development.",
+    "not_yet_covered": {
+      "vision_hearing": "Researched 2026-10-18 (deeper pass): found real, specific primary sources, but none usable verbatim here due to copyright or format: (1) Hearing — state Early Hearing Detection & Intervention (EHDI) programs (e.g. Indiana's, at secure.in.gov) publish a 0-24-month parent-facing hearing/language milestone checklist; no explicit copyright/rights-reserved notice was found on the specific document fetched, but it is state-authored material, not U.S. federal public domain like CDC's LTSAE, so its exact wording was NOT copied here. (2) Vision — Prevent Blindness's National Center for Children's Vision and Eye Health publishes '18 Key Vision Developmental Milestones From Birth to Baby's First Birthday' (nationalcenter.preventblindness.org), a real, well-credentialed, expert-reviewed checklist (contributors include a Johns Hopkins pediatric ophthalmologist) — but it is explicitly marked '©2020 Prevent Blindness. All rights reserved,' so per the copyright-caution rule its item text was NOT copied here either. AAP/AAPOS vision guidance (Donahue et al. 2016, Pediatrics) covers in-clinic screening ages/instruments, not a parent-reportable checklist. Next step: either (a) request written permission from Prevent Blindness (contact: nottingham@preventblindness.org) to adapt their 18-milestone tool, and separately confirm the EHDI material's reuse terms with the issuing state/NCHAM, or (b) have a pediatric/audiology/ophthalmology reviewer author original milestone wording from the underlying clinical facts (facts aren't copyrightable, only this specific expression of them), citing these sources as background. Do not add entries here until one of those happens.",
+      "growth": "Sourced 2026-10-18: official CDC and WHO growth chart LMS/percentile data files, downloaded verbatim into data/growth/ (see data/growth/README.md) from cdc.gov/growthcharts. These are percentile-curve data, not a milestone checklist, so they live in their own files/format rather than as entries in this JSON.",
+      "school_age_adolescent_behavior": "Researched 2026-10-18 (deeper pass, fetched primary sources directly): (1) PHQ-A — CONFIRMED public domain. The official PHQ instruction manual (phqscreeners.com) states verbatim: 'All of the measures included in Table 1 are in the public domain. No permission is required to reproduce, translate, display or distribute,' and Table 1 explicitly lists PHQ-A. However, this manual does NOT itself contain the PHQ-A's items — its own text says the PHQ-A's 'diagnostic scoring [is] described in manual, available upon request.' So the license is confirmed, but the actual item text still needs to be requested from phqscreeners.com before it can be added here. (2) PSC-17 — a full 35-item Pediatric Symptom Checklist (parent PSC and youth Y-PSC), with item text, cutoff scores, and scoring instructions, was found in an official Bright Futures (AAP/HRSA) 'Tool for Professionals' PDF (brightfutures.org) citing Jellinek & Murphy (Massachusetts General Hospital) as developers; no explicit copyright/rights-reserved restriction was visible in that document. This is the 35-item PSC, not the PSC-17 short form specifically — the exact 17-item subset and its 3 subscales (attention/internalizing/externalizing) must be confirmed against the original validation paper (Gardner et al. 1999) before using a subset, since using the wrong items invalidates the measure. It was NOT added here pending that confirmation and a direct license check with psc.partners.org / MGH. (3) Vanderbilt — the NICHQ 1st edition (2002) is explicitly free to download with a request to cite NICHQ; however, forms from the 2nd/3rd editions circulating online carry an AAP 'Copyright © 2012 American Academy of Pediatrics. All Rights Reserved' notice, so edition matters. Use only the 1st edition content (with citation) or obtain explicit AAP/NICHQ permission for later editions. None of these three instruments' item text was added to this file this pass. Before integrating any of them: get written confirmation of current terms from the primary source, resolve the PSC-17 subset question, then add as a separate, properly licensed questionnaire module (not milestone entries), with pediatric/clinical sign-off."
+    },
+    "sources": {
+      "cdc_ltsae": {
+        "name": "CDC \"Learn the Signs. Act Early.\" (LTSAE) developmental milestone checklists",
+        "publisher": "U.S. Centers for Disease Control and Prevention",
+        "url": "https://www.cdc.gov/act-early/milestones/",
+        "accessed": "2026-10-18",
+        "license_note": "U.S. federal government public health material. Verify current version/terms at cdc.gov before relying on it in production.",
+        "disclaimer": "CDC states these checklists are not a substitute for standardized, validated developmental screening tools (e.g. ASQ-3, M-CHAT-R/F)."
+      }
+    },
+    "general_guidance": {
+      "when_to_act": "If a child is not meeting one or more milestones for their age, has lost a skill they once had (regression), or a parent has any other concern, CDC's guidance is to act early: talk with the child's doctor and ask about formal developmental screening, rather than waiting.",
+      "corrected_age_note": "For children born before 37 weeks, CDC/AAP guidance (reflected in Agents.md Hard rules) is to use corrected age, not chronological age, when checking milestones until the child is 2 years old.",
+      "next_steps": "If concerns remain after talking with the doctor, ask for a referral to a specialist, and contact the family's state/territory early intervention program (CDC maintains a directory at cdc.gov/FindEI)."
+    }
+  },
+  "ages": [
+    {
+      "age_label": "2 months",
+      "age_months_min": 2,
+      "age_months_max": 2,
+      "domains": {
+        "social_emotional": [
+          { "id": "2mo.se.1", "text": "Calms down when spoken to or picked up", "source": "cdc_ltsae" },
+          { "id": "2mo.se.2", "text": "Looks at your face", "source": "cdc_ltsae" },
+          { "id": "2mo.se.3", "text": "Seems happy to see you when you walk up to her", "source": "cdc_ltsae" },
+          { "id": "2mo.se.4", "text": "Smiles when you talk to or smile at her", "source": "cdc_ltsae" }
+        ],
+        "language_communication": [
+          { "id": "2mo.lc.1", "text": "Makes sounds other than crying", "source": "cdc_ltsae" },
+          { "id": "2mo.lc.2", "text": "Reacts to loud sounds", "source": "cdc_ltsae" }
+        ],
+        "cognitive": [
+          { "id": "2mo.cog.1", "text": "Watches you as you move", "source": "cdc_ltsae" },
+          { "id": "2mo.cog.2", "text": "Looks at a toy for several seconds", "source": "cdc_ltsae" }
+        ],
+        "movement_physical": [
+          { "id": "2mo.mp.1", "text": "Holds head up when on tummy", "source": "cdc_ltsae" },
+          { "id": "2mo.mp.2", "text": "Moves both arms and both legs", "source": "cdc_ltsae" },
+          { "id": "2mo.mp.3", "text": "Opens hands briefly", "source": "cdc_ltsae" }
+        ]
+      }
+    },
+    {
+      "age_label": "4 months",
+      "age_months_min": 4,
+      "age_months_max": 4,
+      "domains": {
+        "social_emotional": [
+          { "id": "4mo.se.1", "text": "Smiles on his own to get your attention", "source": "cdc_ltsae" },
+          { "id": "4mo.se.2", "text": "Chuckles (not yet a full laugh) when you try to make him laugh", "source": "cdc_ltsae" },
+          { "id": "4mo.se.3", "text": "Looks at you, moves, or makes sounds to get or keep your attention", "source": "cdc_ltsae" }
+        ],
+        "language_communication": [
+          { "id": "4mo.lc.1", "text": "Makes sounds like \"oooo\", \"aahh\" (cooing)", "source": "cdc_ltsae" },
+          { "id": "4mo.lc.2", "text": "Makes sounds back when you talk to him", "source": "cdc_ltsae" },
+          { "id": "4mo.lc.3", "text": "Turns head towards the sound of your voice", "source": "cdc_ltsae" }
+        ],
+        "cognitive": [
+          { "id": "4mo.cog.1", "text": "If hungry, opens mouth when he sees breast or bottle", "source": "cdc_ltsae" },
+          { "id": "4mo.cog.2", "text": "Looks at her hands with interest", "source": "cdc_ltsae" }
+        ],
+        "movement_physical": [
+          { "id": "4mo.mp.1", "text": "Holds head steady without support when you are holding him", "source": "cdc_ltsae" },
+          { "id": "4mo.mp.2", "text": "Holds a toy when you put it in his hand", "source": "cdc_ltsae" },
+          { "id": "4mo.mp.3", "text": "Uses his arm to swing at toys", "source": "cdc_ltsae" },
+          { "id": "4mo.mp.4", "text": "Brings hands to mouth", "source": "cdc_ltsae" },
+          { "id": "4mo.mp.5", "text": "Pushes up onto elbows/forearms when on tummy", "source": "cdc_ltsae" }
+        ]
+      }
+    },
+    {
+      "age_label": "6 months",
+      "age_months_min": 6,
+      "age_months_max": 6,
+      "domains": {
+        "social_emotional": [
+          { "id": "6mo.se.1", "text": "Knows familiar people", "source": "cdc_ltsae" },
+          { "id": "6mo.se.2", "text": "Likes to look at self in a mirror", "source": "cdc_ltsae" },
+          { "id": "6mo.se.3", "text": "Laughs", "source": "cdc_ltsae" }
+        ],
+        "language_communication": [
+          { "id": "6mo.lc.1", "text": "Takes turns making sounds with you", "source": "cdc_ltsae" },
+          { "id": "6mo.lc.2", "text": "Blows \"raspberries\" (sticks tongue out and blows)", "source": "cdc_ltsae" },
+          { "id": "6mo.lc.3", "text": "Makes squealing noises", "source": "cdc_ltsae" }
+        ],
+        "cognitive": [
+          { "id": "6mo.cog.1", "text": "Puts things in her mouth to explore them", "source": "cdc_ltsae" },
+          { "id": "6mo.cog.2", "text": "Reaches to grab a toy she wants", "source": "cdc_ltsae" },
+          { "id": "6mo.cog.3", "text": "Closes lips to show she doesn't want more food", "source": "cdc_ltsae" }
+        ],
+        "movement_physical": [
+          { "id": "6mo.mp.1", "text": "Rolls from tummy to back", "source": "cdc_ltsae" },
+          { "id": "6mo.mp.2", "text": "Pushes up with straight arms when on tummy", "source": "cdc_ltsae" },
+          { "id": "6mo.mp.3", "text": "Leans on hands to support herself when sitting", "source": "cdc_ltsae" }
+        ]
+      }
+    },
+    {
+      "age_label": "9 months",
+      "age_months_min": 9,
+      "age_months_max": 9,
+      "domains": {
+        "social_emotional": [
+          { "id": "9mo.se.1", "text": "Is shy, clingy, or fearful around strangers", "source": "cdc_ltsae" },
+          { "id": "9mo.se.2", "text": "Shows several facial expressions, like happy, sad, angry, and surprised", "source": "cdc_ltsae" },
+          { "id": "9mo.se.3", "text": "Looks when you call her name", "source": "cdc_ltsae" },
+          { "id": "9mo.se.4", "text": "Reacts when you leave (looks, reaches for you, or cries)", "source": "cdc_ltsae" },
+          { "id": "9mo.se.5", "text": "Smiles or laughs when you play peek-a-boo", "source": "cdc_ltsae" }
+        ],
+        "language_communication": [
+          { "id": "9mo.lc.1", "text": "Makes a lot of different sounds like \"mamamama\" and \"bababababa\"", "source": "cdc_ltsae" },
+          { "id": "9mo.lc.2", "text": "Lifts arms up to be picked up", "source": "cdc_ltsae" }
+        ],
+        "cognitive": [
+          { "id": "9mo.cog.1", "text": "Looks for objects when dropped out of sight (like his spoon or toy)", "source": "cdc_ltsae" },
+          { "id": "9mo.cog.2", "text": "Bangs two things together", "source": "cdc_ltsae" }
+        ],
+        "movement_physical": [
+          { "id": "9mo.mp.1", "text": "Gets to a sitting position by herself", "source": "cdc_ltsae" },
+          { "id": "9mo.mp.2", "text": "Moves things from one hand to her other hand", "source": "cdc_ltsae" },
+          { "id": "9mo.mp.3", "text": "Uses fingers to \"rake\" food towards himself", "source": "cdc_ltsae" },
+          { "id": "9mo.mp.4", "text": "Sits without support", "source": "cdc_ltsae" }
+        ]
+      }
+    },
+    {
+      "age_label": "1 year",
+      "age_months_min": 12,
+      "age_months_max": 12,
+      "domains": {
+        "social_emotional": [
+          { "id": "1yr.se.1", "text": "Plays games with you, like pat-a-cake", "source": "cdc_ltsae" }
+        ],
+        "language_communication": [
+          { "id": "1yr.lc.1", "text": "Waves \"bye-bye\"", "source": "cdc_ltsae" },
+          { "id": "1yr.lc.2", "text": "Calls a parent \"mama\" or \"dada\" or another special name", "source": "cdc_ltsae" },
+          { "id": "1yr.lc.3", "text": "Understands \"no\" (pauses briefly or stops when you say it)", "source": "cdc_ltsae" }
+        ],
+        "cognitive": [
+          { "id": "1yr.cog.1", "text": "Puts something in a container, like a block in a cup", "source": "cdc_ltsae" },
+          { "id": "1yr.cog.2", "text": "Looks for things he sees you hide, like a toy under a blanket", "source": "cdc_ltsae" }
+        ],
+        "movement_physical": [
+          { "id": "1yr.mp.1", "text": "Pulls up to stand", "source": "cdc_ltsae" },
+          { "id": "1yr.mp.2", "text": "Walks, holding on to furniture", "source": "cdc_ltsae" },
+          { "id": "1yr.mp.3", "text": "Drinks from a cup without a lid, as you hold it", "source": "cdc_ltsae" },
+          { "id": "1yr.mp.4", "text": "Picks things up between thumb and pointer finger, like small bits of food", "source": "cdc_ltsae" }
+        ]
+      }
+    },
+    {
+      "age_label": "15 months",
+      "age_months_min": 15,
+      "age_months_max": 15,
+      "domains": {
+        "social_emotional": [
+          { "id": "15mo.se.1", "text": "Copies other children while playing, like taking toys out of a container when another child does", "source": "cdc_ltsae" },
+          { "id": "15mo.se.2", "text": "Shows you an object she likes", "source": "cdc_ltsae" },
+          { "id": "15mo.se.3", "text": "Claps when excited", "source": "cdc_ltsae" },
+          { "id": "15mo.se.4", "text": "Hugs stuffed doll or other toy", "source": "cdc_ltsae" },
+          { "id": "15mo.se.5", "text": "Shows you affection (hugs, cuddles, or kisses you)", "source": "cdc_ltsae" }
+        ],
+        "language_communication": [
+          { "id": "15mo.lc.1", "text": "Tries to say one or two words besides \"mama\" or \"dada,\" like \"ba\" for ball or \"da\" for dog", "source": "cdc_ltsae" },
+          { "id": "15mo.lc.2", "text": "Looks at a familiar object when you name it", "source": "cdc_ltsae" },
+          { "id": "15mo.lc.3", "text": "Follows directions given with both a gesture and words (e.g. hands over a toy when told \"Give me the toy\")", "source": "cdc_ltsae" },
+          { "id": "15mo.lc.4", "text": "Points to ask for something or to get help", "source": "cdc_ltsae" }
+        ],
+        "cognitive": [
+          { "id": "15mo.cog.1", "text": "Tries to use things the right way, like a phone, cup, or book", "source": "cdc_ltsae" },
+          { "id": "15mo.cog.2", "text": "Stacks at least two small objects, like blocks", "source": "cdc_ltsae" }
+        ],
+        "movement_physical": [
+          { "id": "15mo.mp.1", "text": "Takes a few steps on his own", "source": "cdc_ltsae" },
+          { "id": "15mo.mp.2", "text": "Uses fingers to feed herself some food", "source": "cdc_ltsae" }
+        ]
+      }
+    },
+    {
+      "age_label": "18 months",
+      "age_months_min": 18,
+      "age_months_max": 18,
+      "domains": {
+        "social_emotional": [
+          { "id": "18mo.se.1", "text": "Moves away from you, but looks to make sure you are close by", "source": "cdc_ltsae" },
+          { "id": "18mo.se.2", "text": "Points to show you something interesting", "source": "cdc_ltsae" },
+          { "id": "18mo.se.3", "text": "Puts hands out for you to wash them", "source": "cdc_ltsae" },
+          { "id": "18mo.se.4", "text": "Looks at a few pages in a book with you", "source": "cdc_ltsae" },
+          { "id": "18mo.se.5", "text": "Helps you dress him by pushing arm through sleeve or lifting up foot", "source": "cdc_ltsae" }
+        ],
+        "language_communication": [
+          { "id": "18mo.lc.1", "text": "Tries to say three or more words besides \"mama\" or \"dada\"", "source": "cdc_ltsae" },
+          { "id": "18mo.lc.2", "text": "Follows one-step directions without any gestures, like giving you the toy when you say, \"Give it to me.\"", "source": "cdc_ltsae" }
+        ],
+        "cognitive": [
+          { "id": "18mo.cog.1", "text": "Copies you doing chores, like sweeping with a broom", "source": "cdc_ltsae" },
+          { "id": "18mo.cog.2", "text": "Plays with toys in a simple way, like pushing a toy car", "source": "cdc_ltsae" }
+        ],
+        "movement_physical": [
+          { "id": "18mo.mp.1", "text": "Walks without holding on to anyone or anything", "source": "cdc_ltsae" },
+          { "id": "18mo.mp.2", "text": "Scribbles", "source": "cdc_ltsae" },
+          { "id": "18mo.mp.3", "text": "Drinks from a cup without a lid and may spill sometimes", "source": "cdc_ltsae" },
+          { "id": "18mo.mp.4", "text": "Feeds himself with his fingers", "source": "cdc_ltsae" },
+          { "id": "18mo.mp.5", "text": "Tries to use a spoon", "source": "cdc_ltsae" },
+          { "id": "18mo.mp.6", "text": "Climbs on and off a couch or chair without help", "source": "cdc_ltsae" }
+        ]
+      }
+    },
+    {
+      "age_label": "2 years",
+      "age_months_min": 24,
+      "age_months_max": 24,
+      "domains": {
+        "social_emotional": [
+          { "id": "2yr.se.1", "text": "Notices when others are hurt or upset, like pausing or looking sad when someone is crying", "source": "cdc_ltsae" },
+          { "id": "2yr.se.2", "text": "Looks at your face to see how to react in a new situation", "source": "cdc_ltsae" }
+        ],
+        "language_communication": [
+          { "id": "2yr.lc.1", "text": "Points to things in a book when you ask, like \"Where is the bear?\"", "source": "cdc_ltsae" },
+          { "id": "2yr.lc.2", "text": "Says at least two words together, like \"More milk.\"", "source": "cdc_ltsae" },
+          { "id": "2yr.lc.3", "text": "Points to at least two body parts when you ask him to show you", "source": "cdc_ltsae" },
+          { "id": "2yr.lc.4", "text": "Uses more gestures than just waving and pointing, like blowing a kiss or nodding yes", "source": "cdc_ltsae" }
+        ],
+        "cognitive": [
+          { "id": "2yr.cog.1", "text": "Holds something in one hand while using the other hand; for example, holding a container and taking the lid off", "source": "cdc_ltsae" },
+          { "id": "2yr.cog.2", "text": "Tries to use switches, knobs, or buttons on a toy", "source": "cdc_ltsae" },
+          { "id": "2yr.cog.3", "text": "Plays with more than one toy at the same time, like putting toy food on a toy plate", "source": "cdc_ltsae" }
+        ],
+        "movement_physical": [
+          { "id": "2yr.mp.1", "text": "Kicks a ball", "source": "cdc_ltsae" },
+          { "id": "2yr.mp.2", "text": "Runs", "source": "cdc_ltsae" },
+          { "id": "2yr.mp.3", "text": "Walks (not climbs) up a few stairs with or without help", "source": "cdc_ltsae" },
+          { "id": "2yr.mp.4", "text": "Eats with a spoon", "source": "cdc_ltsae" }
+        ]
+      }
+    },
+    {
+      "age_label": "30 months",
+      "age_months_min": 30,
+      "age_months_max": 30,
+      "domains": {
+        "social_emotional": [
+          { "id": "30mo.se.1", "text": "Plays next to other children and sometimes plays with them", "source": "cdc_ltsae" },
+          { "id": "30mo.se.2", "text": "Shows you what she can do by saying, \"Look at me!\"", "source": "cdc_ltsae" },
+          { "id": "30mo.se.3", "text": "Follows simple routines when told, like helping to pick up toys when you say, \"It's clean-up time.\"", "source": "cdc_ltsae" }
+        ],
+        "language_communication": [
+          { "id": "30mo.lc.1", "text": "Says about 50 words", "source": "cdc_ltsae" },
+          { "id": "30mo.lc.2", "text": "Says two or more words together, with one action word, like \"Doggie run\"", "source": "cdc_ltsae" },
+          { "id": "30mo.lc.3", "text": "Names things in a book when you point and ask, \"What is this?\"", "source": "cdc_ltsae" },
+          { "id": "30mo.lc.4", "text": "Says words like \"I,\" \"me,\" or \"we\"", "source": "cdc_ltsae" }
+        ],
+        "cognitive": [
+          { "id": "30mo.cog.1", "text": "Uses things to pretend, like feeding a block to a doll as if it were food", "source": "cdc_ltsae" },
+          { "id": "30mo.cog.2", "text": "Shows simple problem-solving skills, like standing on a small stool to reach something", "source": "cdc_ltsae" },
+          { "id": "30mo.cog.3", "text": "Follows two-step instructions like \"Put the toy down and close the door.\"", "source": "cdc_ltsae" },
+          { "id": "30mo.cog.4", "text": "Shows he knows at least one color, like pointing to a red crayon when you ask, \"Which one is red?\"", "source": "cdc_ltsae" }
+        ],
+        "movement_physical": [
+          { "id": "30mo.mp.1", "text": "Uses hands to twist things, like turning doorknobs or unscrewing lids", "source": "cdc_ltsae" },
+          { "id": "30mo.mp.2", "text": "Takes some clothes off by himself, like loose pants or an open jacket", "source": "cdc_ltsae" },
+          { "id": "30mo.mp.3", "text": "Jumps off the ground with both feet", "source": "cdc_ltsae" },
+          { "id": "30mo.mp.4", "text": "Turns book pages, one at a time, when you read to her", "source": "cdc_ltsae" }
+        ]
+      }
+    },
+    {
+      "age_label": "3 years",
+      "age_months_min": 36,
+      "age_months_max": 36,
+      "domains": {
+        "social_emotional": [
+          { "id": "3yr.se.1", "text": "Calms down within 10 minutes after you leave her, like at a childcare drop off", "source": "cdc_ltsae" },
+          { "id": "3yr.se.2", "text": "Notices other children and joins them to play", "source": "cdc_ltsae" }
+        ],
+        "language_communication": [
+          { "id": "3yr.lc.1", "text": "Talks with you in conversation using at least two back-and-forth exchanges", "source": "cdc_ltsae" },
+          { "id": "3yr.lc.2", "text": "Asks \"who,\" \"what,\" \"where,\" or \"why\" questions, like \"Where is mommy/daddy?\"", "source": "cdc_ltsae" },
+          { "id": "3yr.lc.3", "text": "Says what action is happening in a picture or book when asked, like \"running,\" \"eating,\" or \"playing\"", "source": "cdc_ltsae" },
+          { "id": "3yr.lc.4", "text": "Says first name, when asked", "source": "cdc_ltsae" },
+          { "id": "3yr.lc.5", "text": "Talks well enough for others to understand, most of the time", "source": "cdc_ltsae" }
+        ],
+        "cognitive": [
+          { "id": "3yr.cog.1", "text": "Draws a circle, when you show him how", "source": "cdc_ltsae" },
+          { "id": "3yr.cog.2", "text": "Avoids touching hot objects, like a stove, when you warn her", "source": "cdc_ltsae" }
+        ],
+        "movement_physical": [
+          { "id": "3yr.mp.1", "text": "Strings items together, like large beads or macaroni", "source": "cdc_ltsae" },
+          { "id": "3yr.mp.2", "text": "Puts on some clothes by himself, like loose pants or a jacket", "source": "cdc_ltsae" },
+          { "id": "3yr.mp.3", "text": "Uses a fork", "source": "cdc_ltsae" }
+        ]
+      }
+    },
+    {
+      "age_label": "4 years",
+      "age_months_min": 48,
+      "age_months_max": 48,
+      "domains": {
+        "social_emotional": [
+          { "id": "4yr.se.1", "text": "Pretends to be something else during play (teacher, superhero, dog)", "source": "cdc_ltsae" },
+          { "id": "4yr.se.2", "text": "Asks to go play with children if none are around, like \"Can I play with Alex?\"", "source": "cdc_ltsae" },
+          { "id": "4yr.se.3", "text": "Comforts others who are hurt or sad, like hugging a crying friend", "source": "cdc_ltsae" },
+          { "id": "4yr.se.4", "text": "Avoids danger, like not jumping from tall heights at the playground", "source": "cdc_ltsae" },
+          { "id": "4yr.se.5", "text": "Likes to be a \"helper\"", "source": "cdc_ltsae" },
+          { "id": "4yr.se.6", "text": "Changes behavior based on where she is (place of worship, library, playground)", "source": "cdc_ltsae" }
+        ],
+        "language_communication": [
+          { "id": "4yr.lc.1", "text": "Says sentences with four or more words", "source": "cdc_ltsae" },
+          { "id": "4yr.lc.2", "text": "Says some words from a song, story, or nursery rhyme", "source": "cdc_ltsae" },
+          { "id": "4yr.lc.3", "text": "Talks about at least one thing that happened during her day, like \"I played soccer.\"", "source": "cdc_ltsae" },
+          { "id": "4yr.lc.4", "text": "Answers simple questions like \"What is a coat for?\" or \"What is a crayon for?\"", "source": "cdc_ltsae" }
+        ],
+        "cognitive": [
+          { "id": "4yr.cog.1", "text": "Names a few colors of items", "source": "cdc_ltsae" },
+          { "id": "4yr.cog.2", "text": "Tells what comes next in a well-known story", "source": "cdc_ltsae" },
+          { "id": "4yr.cog.3", "text": "Draws a person with three or more body parts", "source": "cdc_ltsae" }
+        ],
+        "movement_physical": [
+          { "id": "4yr.mp.1", "text": "Catches a large ball most of the time", "source": "cdc_ltsae" },
+          { "id": "4yr.mp.2", "text": "Serves herself food or pours water, with adult supervision", "source": "cdc_ltsae" },
+          { "id": "4yr.mp.3", "text": "Unbuttons some buttons", "source": "cdc_ltsae" },
+          { "id": "4yr.mp.4", "text": "Holds crayon or pencil between fingers and thumb (not a fist)", "source": "cdc_ltsae" }
+        ]
+      }
+    },
+    {
+      "age_label": "5 years",
+      "age_months_min": 60,
+      "age_months_max": 60,
+      "domains": {
+        "social_emotional": [
+          { "id": "5yr.se.1", "text": "Follows rules or takes turns when playing games with other children", "source": "cdc_ltsae" },
+          { "id": "5yr.se.2", "text": "Sings, dances, or acts for you", "source": "cdc_ltsae" },
+          { "id": "5yr.se.3", "text": "Does simple chores at home, like matching socks or clearing the table after eating", "source": "cdc_ltsae" }
+        ],
+        "language_communication": [
+          { "id": "5yr.lc.1", "text": "Tells a story she heard or made up with at least two events, for example, a cat was stuck in a tree and a firefighter saved it", "source": "cdc_ltsae" },
+          { "id": "5yr.lc.2", "text": "Answers simple questions about a book or story after you read or tell it to him", "source": "cdc_ltsae" },
+          { "id": "5yr.lc.3", "text": "Keeps a conversation going with more than three back-and-forth exchanges", "source": "cdc_ltsae" },
+          { "id": "5yr.lc.4", "text": "Uses or recognizes simple rhymes (bat-cat, ball-tall)", "source": "cdc_ltsae" }
+        ],
+        "cognitive": [
+          { "id": "5yr.cog.1", "text": "Counts to 10", "source": "cdc_ltsae" },
+          { "id": "5yr.cog.2", "text": "Names some numbers between 1 and 5 when you point to them", "source": "cdc_ltsae" },
+          { "id": "5yr.cog.3", "text": "Uses words about time, like \"yesterday,\" \"tomorrow,\" \"morning,\" or \"night\"", "source": "cdc_ltsae" },
+          { "id": "5yr.cog.4", "text": "Pays attention for 5 to 10 minutes during activities, for example, during story time or making arts and crafts (screen time does not count)", "source": "cdc_ltsae" },
+          { "id": "5yr.cog.5", "text": "Writes some letters in her name", "source": "cdc_ltsae" },
+          { "id": "5yr.cog.6", "text": "Names some letters when you point to them", "source": "cdc_ltsae" }
+        ],
+        "movement_physical": [
+          { "id": "5yr.mp.1", "text": "Buttons some buttons", "source": "cdc_ltsae" },
+          { "id": "5yr.mp.2", "text": "Hops on one foot", "source": "cdc_ltsae" }
+        ]
+      }
+    }
+  ]
+}

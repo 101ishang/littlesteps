@@ -1,0 +1,15 @@
+# Local SQLite database — contains user accounts and children's data, never commit.
+data/app.db
+data/*.db
+data/*.db-journal
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Secrets
+.env
+
+# Claude Code tooling config, not part of the app
+.claude/
