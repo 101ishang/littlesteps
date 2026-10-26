@@ -52,3 +52,4 @@ A record of user prompts given to Claude Code for work done in this directory (`
 48. yes
 49. I dont want to paste my portkey api key anywhere . Is there any other way possible
 50. wait. The instructions of the project says that the teaching staff will make it run from a fresh clone and run it by following the Readme step by step. Can you help me do that and we can avoid the online hosting method
+51. Here are the final instructions. avoid point number 3 (followed by a screenshot of the professor's email: submit report.html + slides.html with the GitHub repo URL in each, an optional testing video (point 3, to be skipped), and nothing else.)
