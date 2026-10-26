@@ -1,7 +1,7 @@
 # Render.com Blueprint — deploys LittleSteps as a single web service.
 # In the Render dashboard: New -> Blueprint -> select this repo -> Apply.
-# You'll be prompted to fill in the two "sync: false" secret values below
-# (never commit real values for these — see Agents.md -> Secrets).
+# You'll be prompted to fill in the "sync: false" values below (never commit
+# real values for these — see Agents.md -> Secrets).
 services:
   - type: web
     name: littlesteps
@@ -12,6 +12,12 @@ services:
     envVars:
       - key: PORTKEY_API_KEY
         sync: false
+        # Optional. Leave blank if you don't want to give this key to a
+        # hosting provider — backend/agents.py fails closed when it's
+        # missing (every result just uses the fixed, non-AI explanation
+        # text instead of a live one; nothing else about the app breaks).
+        # The real AI-agent evidence for this project already lives in
+        # report.html, captured from local runs.
       - key: JWT_SECRET_KEY
         sync: false
       - key: FRONTEND_URL

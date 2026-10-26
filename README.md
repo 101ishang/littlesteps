@@ -89,8 +89,13 @@ second process to run.
 1. Push this repo to GitHub (already done if you're reading this from the repo).
 2. In the Render dashboard: **New → Blueprint**, point it at this repo. Render reads `render.yaml`
    and creates one web service with the right build/start commands already filled in.
-3. When prompted, set the two secret environment variables (never commit real values for these):
-   - `PORTKEY_API_KEY` — your Portkey key
+3. When prompted, set the secret environment variables (never commit real values for these):
+   - `PORTKEY_API_KEY` — your Portkey key. **Optional** — if you'd rather not give a hosting
+     provider this key, leave it blank. `backend/agents.py` fails closed when it's missing: every
+     result just shows the fixed, non-AI explanation text instead of a live one, and nothing else
+     about the app breaks. The real AI-agent evidence (screenshots, measured tokens, the live
+     safety demo) is already captured in `report.html` from local runs, so the hosted copy doesn't
+     need to reproduce it.
    - `JWT_SECRET_KEY` — any random string (e.g. `python3 -c "import secrets; print(secrets.token_hex(32))"`)
 4. Deploy. Once Render assigns your URL (e.g. `https://littlesteps.onrender.com`), go back to the
    service's environment variables and set `FRONTEND_URL` to that exact URL (with `https://`) —
